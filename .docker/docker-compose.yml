@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+    app:
+        container_name: api-image-resizer
+        build: ../app/
+        ports:
+        - 8081:80
+        volumes:
+        - ../app/:/home/api-images-resizer
+        networks:
+        - app_network
+    
+    image-resizer:
+        container_name: image-resizer
+        build: ../image-resizer/
+        volumes: 
+            - ../image-resizer/:/usr/src/app/
+        ports: 
+            - 6500:6500
+        environment: 
+            PORT: 5000
+        networks:
+        - app_network
+
+    rabbitmq3:
+        container_name: "rabbitmq"
+        image: rabbitmq:3.8-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=admin
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        networks:
+        - app_network
+
+networks:
+    app_network:
+        driver: bridge
