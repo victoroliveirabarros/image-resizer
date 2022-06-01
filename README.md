@@ -1,1 +1,0 @@
-# [WIP] image-resizer
